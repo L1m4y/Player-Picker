@@ -1,4 +1,4 @@
-![Player Picker](icons/title.png) ![icon](icons/icon.png)
+![Player Picker](icons/title.png)
 
 A tool to reassign controller positions on Arch Linux.
 
