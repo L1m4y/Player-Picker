@@ -1,7 +1,4 @@
-<p align="center">
-  <img src="icons/tray.png" width="50" valign="middle">
-  <img src="icons/title.png" width="600" valign="middle">
-</p>
+![Player Picker](icons/title.png) ![icon](icons/icon.png)
 
 A tool to reassign controller positions on Arch Linux.
 
