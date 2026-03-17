@@ -6,7 +6,7 @@ Player Picker creates four virtual Xbox 360 controllers, allowing you to map phy
 
 ## Features
 
-- Swap controller priority (P1-P4) in real-time.
+- Swap controller priority in real-time.
 - Virtual Xbox 360 pad emulation for maximum compatibility.
 - Qt6 interface for KDE Plasma and Wayland.
 - Background daemon to handle input routing.
