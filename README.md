@@ -2,7 +2,7 @@
 
 A tool to reassign controller positions on Arch Linux.
 
-Player Picker creates four virtual Xbox 360 controllers, allowing you to map physical gamepads to specific slots (P1-P4) without restarting games or Steam.
+Player Picker creates four virtual Xbox 360 controllers, allowing you to map physical gamepads to specific slots without restarting games or Steam.
 
 ## Features
 
