@@ -9,6 +9,7 @@ from PyQt6.QtCore import QTimer, Qt, pyqtSignal
 from PyQt6.QtGui import QFont, QCursor, QIcon, QPixmap
 
 SOCKET_PATH = os.environ.get("PLAYER_PICKER_SOCKET", "/run/joy_slot.sock")
+SLOT_COUNT = max(1, min(8, int(os.environ.get("PLAYER_PICKER_SLOTS", "4"))))
 ICONS_DIR = os.environ.get("PLAYER_PICKER_ICONS") or str(Path(__file__).resolve().parent / "icons")
 
 class SlotCard(QFrame):
@@ -63,7 +64,7 @@ class JoySlotGUI(QWidget):
         self.layout.addLayout(self.cards_layout)
         
         self.slots_ui = []
-        for i in range(4):
+        for i in range(SLOT_COUNT):
             card = SlotCard(i)
             card.setObjectName(f"card_{i}")
             card_layout = QVBoxLayout(card)
@@ -175,7 +176,7 @@ class JoySlotGUI(QWidget):
             self.status_label.setText("System active. Click a controller to move it.")
         
         devices = resp.get("devices", [])
-        slot_map = {i: None for i in range(4)}
+        slot_map = {i: None for i in range(SLOT_COUNT)}
         for dev in devices:
             if 0 <= dev.get("slot", -1) <= 3:
                 slot_map[dev["slot"]] = dev

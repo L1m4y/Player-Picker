@@ -9,6 +9,7 @@ from pathlib import Path
 import glob
 
 SOCKET_PATH = os.environ.get("PLAYER_PICKER_SOCKET", "/run/joy_slot.sock")
+SLOT_COUNT = max(1, min(8, int(os.environ.get("PLAYER_PICKER_SLOTS", "4"))))
 
 VIRTUAL_CAPS = {
     e.EV_KEY: [e.BTN_A, e.BTN_B, e.BTN_X, e.BTN_Y, e.BTN_TL, e.BTN_TR, e.BTN_SELECT, e.BTN_START, e.BTN_MODE, e.BTN_THUMBL, e.BTN_THUMBR, e.BTN_DPAD_UP, e.BTN_DPAD_DOWN, e.BTN_DPAD_LEFT, e.BTN_DPAD_RIGHT],
@@ -25,11 +26,12 @@ VIRTUAL_CAPS = {
 }
 
 class VirtualGamepadManager:
-    def __init__(self):
+    def __init__(self, slot_count=SLOT_COUNT):
+        self.slot_count = slot_count
         self.virtual_slots = []
         self.phys_devices = {}
-        for i in range(1, 5):
-            ui = evdev.UInput(VIRTUAL_CAPS, name=f"Virtual Gamepad Slot {i}", vendor=0x045e, product=0x028e, version=0x0110)
+        for index in range(slot_count):
+            ui = evdev.UInput(VIRTUAL_CAPS, name=f"Virtual Gamepad Slot {index + 1}", vendor=0x045e, product=0x028e, version=0x0110, bustype=0x03)
             self.virtual_slots.append(ui)
 
     def is_gamepad(self, device):
@@ -48,7 +50,7 @@ class VirtualGamepadManager:
             if not self.is_gamepad(device):
                 return
             used_slots = {info["slot"] for info in self.phys_devices.values()}
-            avail = [slot for slot in range(4) if slot not in used_slots]
+            avail = [slot for slot in range(self.slot_count) if slot not in used_slots]
             current_slot = avail[0] if avail else 0
             self.phys_devices[device_path] = {"device": device, "slot": current_slot, "name": device.name}
             device.grab()
@@ -89,7 +91,7 @@ class VirtualGamepadManager:
             response = {"status": "error"}
             if action == "get_state":
                 devices = [{"path": path, "name": info["name"], "slot": info["slot"]} for path, info in self.phys_devices.items()]
-                response = {"status": "ok", "devices": devices}
+                response = {"status": "ok", "devices": devices, "slots": self.slot_count}
             elif action == "set_slot":
                 path = req.get("path")
                 new_slot = req.get("slot")
@@ -112,7 +114,7 @@ class VirtualGamepadManager:
                 pass
 
 async def main_async(socket_path):
-    manager = VirtualGamepadManager()
+    manager = VirtualGamepadManager(slot_count=SLOT_COUNT)
     if os.path.exists(socket_path):
         os.remove(socket_path)
     server = await asyncio.start_unix_server(manager.handle_ipc, path=socket_path)
