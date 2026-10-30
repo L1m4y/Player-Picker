@@ -1,12 +1,15 @@
 [Unit]
 Description=Player Picker Backend Daemon
 After=systemd-udevd.service
+Wants=systemd-udevd.service
 
 [Service]
 Type=simple
 ExecStart=/usr/bin/playerpicker-daemon
 Restart=always
 RestartSec=3
+SupplementaryGroups=input
+Environment=PLAYER_PICKER_SOCKET=/run/joy_slot.sock
 
 [Install]
 WantedBy=multi-user.target
