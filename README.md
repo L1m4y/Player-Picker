@@ -1,10 +1,26 @@
-![Player Picker](icons/title.png)
+<p align="center">
+  <img src="icons/title.png" width="320" alt="Player Picker">
+</p>
 
-# Player Picker
+<p align="center">
+  <a href="https://github.com/L1m4y/Player-Picker">Repository</a> ·
+  <a href="https://github.com/L1m4y/Player-Picker/issues">Issues</a> ·
+  <a href="https://github.com/L1m4y/Player-Picker/blob/main/LICENSE">License</a>
+</p>
 
-Player Picker maps physical gamepads to four virtual Xbox 360 controller slots. It allows reordering controllers while a game, Steam, or emulator is already running.
+Reassign physical gamepads to fixed virtual Xbox 360 controller slots while games, Steam or emulators are already running.
 
-Virtual slots are numbered from one to four. Select a connected physical controller, then select the target slot to move it.
+Player Picker creates four virtual Xbox 360 controllers and routes physical gamepad events to the selected slot in real time.
+
+## Overview
+
+| Field | Details |
+| --- | --- |
+| Platform | Linux |
+| Interface | Qt6 |
+| Compatibility | Xbox 360 controller emulation |
+| Slots | Four by default, configurable |
+| Communication | Unix socket with JSON |
 
 ## Features
 
@@ -13,26 +29,30 @@ Virtual slots are numbered from one to four. Select a connected physical control
 - Qt6 interface for Plasma and Wayland
 - Background daemon for input routing
 - Hardware-safe event forwarding
-- Configurable slot count
+- Configurable controller slot count
+- Tray integration
 
 ## Requirements
 
-- Linux
-- Python 3.11 or newer
-- `evdev`
-- `PyQt6`
-- `qt6-wayland` and `qt6-svg` on KDE or Wayland systems
+| Tool | Version |
+| --- | --- |
+| Python | 3.11 or newer |
+| evdev | 1.8 or newer |
+| PyQt6 | 6.7 or newer |
+| qt6-wayland | Desktop integration |
+| qt6-svg | Icon rendering |
 
 ## Installation
 
-Install the Python dependencies:
+Install dependencies on Arch Linux:
 
 ```bash
+sudo pacman -S python-evdev python-pyqt6 qt6-wayland qt6-svg
 pip install -r requirements.txt
 pip install .
 ```
 
-Or run directly from the repository:
+Run directly from the repository:
 
 ```bash
 python3 joy_daemon.py
@@ -53,17 +73,15 @@ Start the interface:
 playerpicker
 ```
 
-Environment variables:
+Configuration:
 
 | Variable | Default | Description |
 | --- | --- | --- |
 | `PLAYER_PICKER_SOCKET` | `/run/joy_slot.sock` | Daemon socket path |
-| `PLAYER_PICKER_ICONS` | `./icons` | Icon directory |
+| `PLAYER_PICKER_ICONS` | `./icons` | Interface icon directory |
 | `PLAYER_PICKER_SLOTS` | `4` | Number of virtual controllers |
 
 ## Service
-
-Install and enable the included systemd unit:
 
 ```bash
 sudo install -m 644 playerpicker.service /etc/systemd/system/playerpicker.service
@@ -71,32 +89,39 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now playerpicker
 ```
 
+## Workflow
+
+1. Start the daemon.
+2. Open Player Picker.
+3. Click a connected physical controller.
+4. Click the target slot.
+5. The controller moves instantly and the previous occupant swaps back to the source slot.
+
 ## Troubleshooting
 
-- If the daemon reports access errors, add the user to the `input` group or run it as a privileged service.
-- If no controllers appear, verify that `evdev` can open `/dev/input/event*`.
-- If the interface starts without icons, set `PLAYER_PICKER_ICONS` to the `icons` directory.
-- Test the daemon socket manually:
-
-```bash
-python3 -c "import json, socket; s=socket.socket(socket.AF_UNIX); s.connect('/run/joy_slot.sock'); s.sendall(b'{\"action\":\"get_state\"}'); print(s.recv(4096))"
-```
+| Problem | Action |
+| --- | --- |
+| Daemon access error | Add the user to the `input` group or run as a privileged service |
+| No controllers appear | Verify that `evdev` can open `/dev/input/event*` |
+| Missing icons | Set `PLAYER_PICKER_ICONS` to the `icons` directory |
+| Interface cannot connect | Verify the daemon socket with `socat` or Python |
 
 ## Architecture
 
-The daemon creates virtual Xbox 360 controllers with `evdev`, grabs physical input devices and mirrors their events to the assigned slot. The Qt interface communicates with the daemon through a small Unix socket using JSON messages.
+The daemon creates virtual Xbox 360 controllers with `evdev`, grabs physical input devices and mirrors their events to the assigned slot. The PyQt6 interface communicates through a small Unix socket using JSON messages.
 
 See `docs.md` for more detail.
 
 ## Project Structure
 
 ```text
-joy_daemon.py      Daemon and virtual controller routing
-joy_gui.py         PyQt6 interface
-icons/             Interface assets
-docs.md            Architecture notes
-playerpicker.service systemd unit
-pyproject.toml     Packaging metadata
+joy_daemon.py
+joy_gui.py
+icons/
+docs.md
+playerpicker.service
+pyproject.toml
+requirements.txt
 ```
 
 ## License
