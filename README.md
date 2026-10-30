@@ -1,19 +1,60 @@
 ![Player Picker](icons/title.png)
 
-A tool to reassign controller positions on Arch Linux.
+# Player Picker
 
-Player Picker creates four virtual Xbox 360 controllers, allowing you to map physical gamepads to specific slots without restarting games or Steam.
+Player Picker maps physical gamepads to fixed virtual Xbox 360 controller slots, allowing controller order changes without restarting games, Steam or emulators.
+
+Virtual controllers are numbered one to four. Select a connected physical controller, then select the target slot to move it.
 
 ## Features
 
-- Swap controller priority in real-time.
-- Virtual Xbox 360 pad emulation for maximum compatibility.
-- Qt6 interface for KDE Plasma and Wayland.
-- Background daemon to handle input routing.
+- Real-time controller priority changes
+- Virtual Xbox 360 controller emulation
+- PyQt6 interface for Plasma and Wayland
+- Background daemon for input routing
+- Four controller slots
 
 ## Dependencies
 
-Install all required packages with this command:
+### Arch Linux
 
 ```bash
-sudo pacman -S python-evdev python-pyqt6 qt6-wayland qt6-svg
+sudo pacman -S python-evdev python-pyqt6
+```
+
+### Python dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+## Running
+
+Start the daemon:
+
+```bash
+sudo playerpicker-daemon
+```
+
+Start the interface:
+
+```bash
+playerpicker
+```
+
+`PLAYER_PICKER_SOCKET` can change the daemon socket path and `PLAYER_PICKER_ICONS` can change the icon directory.
+
+## Service
+
+Install and enable the included systemd unit:
+
+```bash
+sudo install -m 755 playerpicker.service /etc/systemd/system/playerpicker.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now playerpicker
+```
+
+## Notes
+
+- The daemon needs permission to read gamepad devices. Add your user to the `input` group or run it as a privileged service.
+- Four virtual controllers are created at startup.
