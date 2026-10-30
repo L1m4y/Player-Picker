@@ -177,12 +177,18 @@ class JoySlotGUI(QWidget):
         devices = resp.get("devices", [])
         slot_map = {i: None for i in range(4)}
         for dev in devices:
-            if 0 <= dev["slot"] <= 3: slot_map[dev["slot"]] = dev
-        
+            if 0 <= dev.get("slot", -1) <= 3:
+                slot_map[dev["slot"]] = dev
+        paths = {dev.get("path") for dev in devices if dev.get("path")}
+        if self.selected_path is not None and self.selected_path not in paths:
+            self.selected_path = None
+            self.selected_slot = None
         for i, card in enumerate(self.slots_ui):
             dev = slot_map[i]
-            if dev: self.update_card_ui(card, True, dev["name"], dev["path"])
-            else: self.update_card_ui(card, False, None, None)
+            if dev:
+                self.update_card_ui(card, True, dev.get("name", "Controller"), dev.get("path"))
+            else:
+                self.update_card_ui(card, False, None, None)
 
         self.apply_styles()
 
