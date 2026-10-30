@@ -1,26 +1,24 @@
 <p align="center">
-  <img src="icons/title.png" width="320" alt="Player Picker">
+  <img src="icons/title.png" width="520" alt="Player Picker">
 </p>
+
+<p align="center">Reassign physical gamepads to fixed virtual Xbox 360 controller slots.</p>
 
 <p align="center">
-  <a href="https://github.com/L1m4y/Player-Picker">Repository</a> ·
-  <a href="https://github.com/L1m4y/Player-Picker/issues">Issues</a> ·
-  <a href="https://github.com/L1m4y/Player-Picker/blob/main/LICENSE">License</a>
+  <img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/PyQt6-6.7+-41CD52?style=flat-square&logo=qt&logoColor=white" alt="PyQt6">
+  <img src="https://img.shields.io/badge/evdev-Linux-FC6D26?style=flat-square&logo=linux&logoColor=white" alt="evdev">
+  <img src="https://img.shields.io/badge/Platform-Linux%20%2F%20Wayland-FCC624?style=flat-square&logo=linux&logoColor=black" alt="Platform">
+  <img src="https://img.shields.io/badge/License-GPLv3-000000?style=flat-square" alt="License">
 </p>
-
-Reassign physical gamepads to fixed virtual Xbox 360 controller slots while games, Steam or emulators are already running.
-
-Player Picker creates four virtual Xbox 360 controllers and routes physical gamepad events to the selected slot in real time.
 
 ## Overview
 
-| Field | Details |
-| --- | --- |
-| Platform | Linux |
-| Interface | Qt6 |
-| Compatibility | Xbox 360 controller emulation |
-| Slots | Four by default, configurable |
-| Communication | Unix socket with JSON |
+| Interface | Slots | Compatibility | Communication |
+| --- | --- | --- | --- |
+| Qt6 | 4 | Xbox 360 emulation | Unix socket |
+
+Player Picker routes physical gamepad events to one of four virtual Xbox 360 controllers, allowing reordering while a game, Steam or an emulator is already running.
 
 ## Features
 
@@ -34,17 +32,13 @@ Player Picker creates four virtual Xbox 360 controllers and routes physical game
 
 ## Requirements
 
-| Tool | Version |
-| --- | --- |
-| Python | 3.11 or newer |
-| evdev | 1.8 or newer |
-| PyQt6 | 6.7 or newer |
-| qt6-wayland | Desktop integration |
-| qt6-svg | Icon rendering |
+- Linux
+- Python 3.11 or newer
+- `evdev`
+- `PyQt6`
+- `qt6-wayland` and `qt6-svg` on KDE or Wayland systems
 
 ## Installation
-
-Install dependencies on Arch Linux:
 
 ```bash
 sudo pacman -S python-evdev python-pyqt6 qt6-wayland qt6-svg
@@ -101,10 +95,10 @@ sudo systemctl enable --now playerpicker
 
 | Problem | Action |
 | --- | --- |
-| Daemon access error | Add the user to the `input` group or run as a privileged service |
+| Daemon access error | Add the user to the `input` group or run it as a privileged service |
 | No controllers appear | Verify that `evdev` can open `/dev/input/event*` |
 | Missing icons | Set `PLAYER_PICKER_ICONS` to the `icons` directory |
-| Interface cannot connect | Verify the daemon socket with `socat` or Python |
+| Interface cannot connect | Verify the daemon socket with Python |
 
 ## Architecture
 
