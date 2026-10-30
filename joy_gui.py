@@ -237,6 +237,7 @@ class JoySlotGUI(QWidget):
 
 def main():
     app = QApplication(sys.argv)
+    app.setStyle("Fusion")
 
     app.setApplicationName("playerpicker")
     app.setDesktopFileName("playerpicker.desktop")
