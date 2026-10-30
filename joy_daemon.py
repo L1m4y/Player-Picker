@@ -2,11 +2,13 @@
 import evdev
 from evdev import ecodes as e
 import asyncio
-import os
-import glob
+import argparse
 import json
+import os
+from pathlib import Path
+import glob
 
-SOCKET_PATH = "/run/joy_slot.sock"
+SOCKET_PATH = os.environ.get("PLAYER_PICKER_SOCKET", "/run/joy_slot.sock")
 
 VIRTUAL_CAPS = {
     e.EV_KEY: [e.BTN_A, e.BTN_B, e.BTN_X, e.BTN_Y, e.BTN_TL, e.BTN_TR, e.BTN_SELECT, e.BTN_START, e.BTN_MODE, e.BTN_THUMBL, e.BTN_THUMBR, e.BTN_DPAD_UP, e.BTN_DPAD_DOWN, e.BTN_DPAD_LEFT, e.BTN_DPAD_RIGHT],
@@ -99,14 +101,20 @@ class VirtualGamepadManager:
         except Exception: pass
         finally: writer.close()
 
-async def main():
+async def main(socket_path):
     manager = VirtualGamepadManager()
-    if os.path.exists(SOCKET_PATH): os.remove(SOCKET_PATH)
-    server = await asyncio.start_unix_server(manager.handle_ipc, path=SOCKET_PATH)
-    os.chmod(SOCKET_PATH, 0o666)
+    if os.path.exists(socket_path):
+        os.remove(socket_path)
+    server = await asyncio.start_unix_server(manager.handle_ipc, path=socket_path)
+    os.chmod(socket_path, 0o666)
     await asyncio.gather(manager.scan_devices(), server.serve_forever())
 
 if __name__ == "__main__":
-    try: asyncio.run(main())
-    except KeyboardInterrupt: pass
+    parser = argparse.ArgumentParser(description="Player Picker virtual gamepad daemon")
+    parser.add_argument("--socket", default=SOCKET_PATH, help="Unix socket path")
+    args = parser.parse_args()
+    try:
+        asyncio.run(main(args.socket))
+    except KeyboardInterrupt:
+        pass
 
