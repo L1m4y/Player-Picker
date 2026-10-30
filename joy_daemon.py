@@ -81,29 +81,35 @@ class VirtualGamepadManager:
 
     async def handle_ipc(self, reader, writer):
         try:
-            data = await reader.read(1024)
-            if not data: return
+            data = await asyncio.wait_for(reader.read(4096), timeout=1)
+            if not data:
+                return
             req = json.loads(data.decode())
             action = req.get("action")
-            res = {"status": "error"}
-
+            response = {"status": "error"}
             if action == "get_state":
-                devs = [{"path": p, "name": i["name"], "slot": i["slot"]} for p, i in self.phys_devices.items()]
-                res = {"status": "ok", "devices": devs}
+                devices = [{"path": path, "name": info["name"], "slot": info["slot"]} for path, info in self.phys_devices.items()]
+                response = {"status": "ok", "devices": devices}
             elif action == "set_slot":
-                path, new_slot = req.get("path"), req.get("slot")
-                if path in self.phys_devices and 0 <= new_slot <= 3:
+                path = req.get("path")
+                new_slot = req.get("slot")
+                if path in self.phys_devices and isinstance(new_slot, int) and 0 <= new_slot <= 3:
                     old_slot = self.phys_devices[path]["slot"]
-                    for p, info in self.phys_devices.items():
-                        if p != path and info["slot"] == new_slot:
-                            self.phys_devices[p]["slot"] = old_slot
+                    for candidate, info in self.phys_devices.items():
+                        if candidate != path and info["slot"] == new_slot:
+                            info["slot"] = old_slot
                     self.phys_devices[path]["slot"] = new_slot
-                    res = {"status": "ok"}
-            
-            writer.write(json.dumps(res).encode())
+                    response = {"status": "ok"}
+            writer.write(json.dumps(response).encode())
             await writer.drain()
-        except Exception: pass
-        finally: writer.close()
+        except (asyncio.TimeoutError, json.JSONDecodeError, OSError):
+            return
+        finally:
+            writer.close()
+            try:
+                await writer.wait_closed()
+            except Exception:
+                pass
 
 async def main(socket_path):
     manager = VirtualGamepadManager()
