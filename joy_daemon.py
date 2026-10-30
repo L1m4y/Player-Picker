@@ -33,36 +33,40 @@ class VirtualGamepadManager:
             self.virtual_slots.append(ui)
 
     def is_gamepad(self, device):
-        if "Virtual Gamepad" in device.name: return False
+        if "Virtual Gamepad" in device.name:
+            return False
         caps = device.capabilities()
-        if e.EV_KEY in caps:
-            keys = caps[e.EV_KEY]
-            if e.BTN_GAMEPAD in keys or e.BTN_SOUTH in keys or e.BTN_A in keys:
-                if e.KEY_A not in keys and e.KEY_ENTER not in keys: return True
-        return False
+        keys = caps.get(e.EV_KEY, [])
+        if e.KEY_A in keys or e.KEY_ENTER in keys:
+            return False
+        return any(key in keys for key in (e.BTN_GAMEPAD, e.BTN_SOUTH, e.BTN_A))
 
     async def handle_device(self, device_path):
+        device = None
         try:
             device = evdev.InputDevice(device_path)
-            if not self.is_gamepad(device): return
-            
+            if not self.is_gamepad(device):
+                return
             used_slots = {info["slot"] for info in self.phys_devices.values()}
-            avail = [i for i in range(4) if i not in used_slots]
+            avail = [slot for slot in range(4) if slot not in used_slots]
             current_slot = avail[0] if avail else 0
-            
             self.phys_devices[device_path] = {"device": device, "slot": current_slot, "name": device.name}
             device.grab()
-
             async for event in device.async_read_loop():
                 slot = self.phys_devices[device_path]["slot"]
-                self.virtual_slots[slot].write(event.type, event.code, event.value)
-                if event.type == e.EV_SYN: self.virtual_slots[slot].syn()
-        except Exception: pass
+                if 0 <= slot < len(self.virtual_slots):
+                    self.virtual_slots[slot].write(event.type, event.code, event.value)
+                    if event.type == e.EV_SYN:
+                        self.virtual_slots[slot].syn()
+        except Exception:
+            return
         finally:
-            if device_path in self.phys_devices:
-                try: self.phys_devices[device_path]["device"].ungrab()
-                except: pass
-                del self.phys_devices[device_path]
+            if device is not None:
+                try:
+                    device.ungrab()
+                except Exception:
+                    pass
+            self.phys_devices.pop(device_path, None)
 
     async def scan_devices(self):
         handled = set()
