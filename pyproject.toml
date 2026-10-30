@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "player-picker"
+version = "0.2.0"
+description = "Reassign physical gamepads to virtual Xbox 360 controller slots"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "evdev>=1.8",
+  "PyQt6>=6.7",
+]
+license = { file = "LICENSE" }
+
+[project.scripts]
+playerpicker = "joy_gui:main"
+playerpicker-daemon = "joy_daemon:main"

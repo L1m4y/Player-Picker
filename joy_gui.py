@@ -234,16 +234,20 @@ class JoySlotGUI(QWidget):
             self.selected_slot = None
             self.refresh_devices()
 
-if __name__ == "__main__":
+def main():
     app = QApplication(sys.argv)
-    
+
     app.setApplicationName("playerpicker")
     app.setDesktopFileName("playerpicker.desktop")
-    
+
     app.setWindowIcon(QIcon(f"{ICONS_DIR}/icon.png"))
     app.setQuitOnLastWindowClosed(False)
-    
+
     window = JoySlotGUI()
     window.show()
     sys.exit(app.exec())
+
+
+if __name__ == "__main__":
+    main()
 

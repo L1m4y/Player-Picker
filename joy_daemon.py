@@ -111,7 +111,7 @@ class VirtualGamepadManager:
             except Exception:
                 pass
 
-async def main(socket_path):
+async def main_async(socket_path):
     manager = VirtualGamepadManager()
     if os.path.exists(socket_path):
         os.remove(socket_path)
@@ -119,12 +119,15 @@ async def main(socket_path):
     os.chmod(socket_path, 0o666)
     await asyncio.gather(manager.scan_devices(), server.serve_forever())
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(description="Player Picker virtual gamepad daemon")
     parser.add_argument("--socket", default=SOCKET_PATH, help="Unix socket path")
     args = parser.parse_args()
     try:
-        asyncio.run(main(args.socket))
+        asyncio.run(main_async(args.socket))
     except KeyboardInterrupt:
         pass
+
+if __name__ == "__main__":
+    main()
 
