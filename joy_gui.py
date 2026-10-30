@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 import sys
 import json
-import socket
 import os
+import socket
+from pathlib import Path
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QFrame, QSystemTrayIcon, QMenu)
 from PyQt6.QtCore import QTimer, Qt, pyqtSignal
 from PyQt6.QtGui import QFont, QCursor, QIcon, QPixmap
 
-SOCKET_PATH = "/run/joy_slot.sock"
-ICONS_DIR = "/home/limay/Documentos/Proyectos/PlayerPicker/icons"
+SOCKET_PATH = os.environ.get("PLAYER_PICKER_SOCKET", "/run/joy_slot.sock")
+ICONS_DIR = os.environ.get("PLAYER_PICKER_ICONS") or str(Path(__file__).resolve().parent / "icons")
 
 class SlotCard(QFrame):
     clicked = pyqtSignal(int)
