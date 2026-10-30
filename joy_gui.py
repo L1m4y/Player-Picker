@@ -9,7 +9,13 @@ from PyQt6.QtCore import QTimer, Qt, pyqtSignal
 from PyQt6.QtGui import QFont, QCursor, QIcon, QPixmap
 
 SOCKET_PATH = os.environ.get("PLAYER_PICKER_SOCKET", "/run/joy_slot.sock")
-SLOT_COUNT = max(1, min(8, int(os.environ.get("PLAYER_PICKER_SLOTS", "4"))))
+def get_slot_count():
+    try:
+        return max(1, min(8, int(os.environ.get("PLAYER_PICKER_SLOTS", "4"))))
+    except (TypeError, ValueError):
+        return 4
+
+SLOT_COUNT = get_slot_count()
 ICONS_DIR = os.environ.get("PLAYER_PICKER_ICONS") or str(Path(__file__).resolve().parent / "icons")
 
 class SlotCard(QFrame):
