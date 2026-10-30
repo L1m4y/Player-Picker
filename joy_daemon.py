@@ -9,7 +9,16 @@ from pathlib import Path
 import glob
 
 SOCKET_PATH = os.environ.get("PLAYER_PICKER_SOCKET", "/run/joy_slot.sock")
-SLOT_COUNT = max(1, min(8, int(os.environ.get("PLAYER_PICKER_SLOTS", "4"))))
+
+
+def get_slot_count():
+    try:
+        return max(1, min(8, int(os.environ.get("PLAYER_PICKER_SLOTS", "4"))))
+    except (TypeError, ValueError):
+        raise SystemExit("PLAYER_PICKER_SLOTS must be an integer between 1 and 8")
+
+
+SLOT_COUNT = get_slot_count()
 
 VIRTUAL_CAPS = {
     e.EV_KEY: [e.BTN_A, e.BTN_B, e.BTN_X, e.BTN_Y, e.BTN_TL, e.BTN_TR, e.BTN_SELECT, e.BTN_START, e.BTN_MODE, e.BTN_THUMBL, e.BTN_THUMBR, e.BTN_DPAD_UP, e.BTN_DPAD_DOWN, e.BTN_DPAD_LEFT, e.BTN_DPAD_RIGHT],
