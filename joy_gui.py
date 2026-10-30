@@ -122,7 +122,7 @@ class JoySlotGUI(QWidget):
         footer = QLabel("Created by L1m4y under GPL license (￣▽￣)/")
         footer.setFont(QFont("Noto Sans", 10))
         footer.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        footer.setStyleSheet("color: palette(text); opacity: 0.1;")
+        footer.setStyleSheet("color: palette(text); opacity: 0.6;")
         self.layout.addWidget(footer)
         
         self.selected_path = None
