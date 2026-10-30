@@ -50,7 +50,10 @@ class JoySlotGUI(QWidget):
         
         title_label = QLabel()
         title_pix = QPixmap(os.path.join(ICONS_DIR, "title.png"))
-        title_label.setPixmap(title_pix.scaledToHeight(100, Qt.TransformationMode.SmoothTransformation))
+        if title_pix.isNull():
+            title_label.setText("Player Picker")
+        else:
+            title_label.setPixmap(title_pix.scaledToHeight(100, Qt.TransformationMode.SmoothTransformation))
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.layout.addWidget(title_label)
         
@@ -77,7 +80,10 @@ class JoySlotGUI(QWidget):
             
             lbl_icon = QLabel()
             pixmap = QPixmap(f"{ICONS_DIR}/controller.png")
-            lbl_icon.setPixmap(pixmap.scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+            if pixmap.isNull():
+                lbl_icon.setText("Gamepad")
+            else:
+                lbl_icon.setPixmap(pixmap.scaled(80, 80, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
             lbl_icon.setAlignment(Qt.AlignmentFlag.AlignCenter)
             
             status_container = QWidget()
@@ -197,11 +203,19 @@ class JoySlotGUI(QWidget):
         card.is_assigned = is_assigned
         card.device_path = path
         if is_assigned:
-            card.status_icon.setPixmap(QPixmap(f"{ICONS_DIR}/check.svg").scaled(18, 18, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+            icon = QPixmap(f"{ICONS_DIR}/check.svg")
+            if icon.isNull():
+                card.status_icon.setText("OK")
+            else:
+                card.status_icon.setPixmap(icon.scaled(18, 18, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
             card.status_text.setText("Active")
             card.lbl_desc.setText(f"{name}")
         else:
-            card.status_icon.setPixmap(QPixmap(f"{ICONS_DIR}/delete.svg").scaled(18, 18, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+            icon = QPixmap(f"{ICONS_DIR}/delete.svg")
+            if icon.isNull():
+                card.status_icon.setText("Off")
+            else:
+                card.status_icon.setPixmap(icon.scaled(18, 18, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
             card.status_text.setText("Inactive")
             card.lbl_desc.setText("Free")
 

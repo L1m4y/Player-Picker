@@ -91,32 +91,11 @@ sudo systemctl enable --now playerpicker
 4. Click the target slot.
 5. The controller moves instantly and the previous occupant swaps back to the source slot.
 
-## Troubleshooting
-
-| Problem | Action |
-| --- | --- |
-| Daemon access error | Add the user to the `input` group or run it as a privileged service |
-| No controllers appear | Verify that `evdev` can open `/dev/input/event*` |
-| Missing icons | Set `PLAYER_PICKER_ICONS` to the `icons` directory |
-| Interface cannot connect | Verify the daemon socket with Python |
-
 ## Architecture
 
 The daemon creates virtual Xbox 360 controllers with `evdev`, grabs physical input devices and mirrors their events to the assigned slot. The PyQt6 interface communicates through a small Unix socket using JSON messages.
 
 See `docs.md` for more detail.
-
-## Project Structure
-
-```text
-joy_daemon.py
-joy_gui.py
-icons/
-docs.md
-playerpicker.service
-pyproject.toml
-requirements.txt
-```
 
 ## License
 
