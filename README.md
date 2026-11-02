@@ -2,7 +2,7 @@
   <img src="icons/title.png" width="520" alt="Player Picker">
 </p>
 
-<p align="center">A friendly Linux tool to swap controller assignments while the game keeps running.</p>
+<p align="center">Reassign physical gamepads to fixed virtual controller slots.</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.11+-808080?style=flat-square&logo=python&logoColor=white" alt="Python">
