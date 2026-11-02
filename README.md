@@ -11,9 +11,16 @@
   <img src="https://img.shields.io/badge/Platform-Linux%20%2F%20Wayland-808080?style=flat-square&logo=linux&logoColor=white" alt="Platform">
 </p>
 
-## Dependencies
+## Installation
 
-Install everything in one command:
+```bash
+pip install -r requirements.txt
+pip install .
+python3 joy_daemon.py
+python3 joy_gui.py
+```
+
+## Dependencies
 
 - Arch Linux
   ```bash
@@ -32,26 +39,12 @@ Install everything in one command:
   sudo zypper install python3 python311 PyQt6 python3-evdev qt6-wayland qt6-svg
   ```
 
-Python packages:
-
-```bash
-pip install -r requirements.txt
-pip install .
-```
-
-## Installation
-
-```bash
-python3 joy_daemon.py
-python3 joy_gui.py
-```
-
 ## Usage
 
 - Start daemon: `playerpicker-daemon`
 - Start GUI: `playerpicker`
 
-## Environment
+Environment:
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -59,7 +52,7 @@ python3 joy_gui.py
 | `PLAYER_PICKER_ICONS` | `./icons` | Icon directory |
 | `PLAYER_PICKER_SLOTS` | `4` | Number of virtual controllers |
 
-## Service
+Service:
 
 ```bash
 sudo install -m 644 playerpicker.service /etc/systemd/system/playerpicker.service
