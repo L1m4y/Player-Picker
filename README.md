@@ -7,9 +7,11 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.11+-808080?style=flat-square&logo=python&logoColor=white" alt="Python">
   <img src="https://img.shields.io/badge/PyQt6-6.7+-808080?style=flat-square&logo=qt&logoColor=white" alt="PyQt6">
-  <img src="https://img.shields.io/badge/evdev-Linux-808080?style=flat-square&logo=linux&logoColor=white" alt="evdev">
   <img src="https://img.shields.io/badge/Platform-Linux%20%2F%20Wayland-808080?style=flat-square&logo=linux&logoColor=white" alt="Platform">
+  <img src="https://img.shields.io/badge/License-GPLv3-808080?style=flat-square&logo=gnu&logoColor=white" alt="License">
 </p>
+
+Player Picker emulates four virtual Xbox 360 controllers and re-routes physical gamepad events to the selected slot in real time, swapping the previous occupant back automatically.
 
 ## Installation
 
@@ -43,14 +45,6 @@ python3 joy_gui.py
 
 - Start daemon: `playerpicker-daemon`
 - Start GUI: `playerpicker`
-
-Environment:
-
-| Variable | Default | Description |
-| --- | --- | --- |
-| `PLAYER_PICKER_SOCKET` | `/run/joy_slot.sock` | Daemon socket path |
-| `PLAYER_PICKER_ICONS` | `./icons` | Icon directory |
-| `PLAYER_PICKER_SLOTS` | `4` | Number of virtual controllers |
 
 Service:
 
