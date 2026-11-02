@@ -5,48 +5,41 @@
 <p align="center">Reassign physical gamepads to fixed virtual Xbox 360 controller slots.</p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/PyQt6-6.7+-41CD52?style=flat-square&logo=qt&logoColor=white" alt="PyQt6">
-  <img src="https://img.shields.io/badge/evdev-Linux-FC6D26?style=flat-square&logo=linux&logoColor=white" alt="evdev">
-  <img src="https://img.shields.io/badge/Platform-Linux%20%2F%20Wayland-FCC624?style=flat-square&logo=linux&logoColor=black" alt="Platform">
-  <img src="https://img.shields.io/badge/License-GPLv3-000000?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/Python-3.11+-808080?style=flat-square&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/PyQt6-6.7+-808080?style=flat-square&logo=qt&logoColor=white" alt="PyQt6">
+  <img src="https://img.shields.io/badge/evdev-Linux-808080?style=flat-square&logo=linux&logoColor=white" alt="evdev">
+  <img src="https://img.shields.io/badge/Platform-Linux%20%2F%20Wayland-808080?style=flat-square&logo=linux&logoColor=white" alt="Platform">
 </p>
 
-## Overview
+## Dependencies
 
-| Interface | Slots | Compatibility | Communication |
-| --- | --- | --- | --- |
-| Qt6 | 4 | Xbox 360 emulation | Unix socket |
+Install everything in one command:
 
-Player Picker routes physical gamepad events to one of four virtual Xbox 360 controllers, allowing reordering while a game, Steam or an emulator is already running.
+- Arch Linux
+  ```bash
+  sudo pacman -S python python-pyqt6 python-evdev qt6-wayland qt6-svg
+  ```
+- Debian / Ubuntu
+  ```bash
+  sudo apt install python3 python3-pyqt6 python3-evdev qt6-wayland qt6-svg
+  ```
+- Fedora
+  ```bash
+  sudo dnf install python3 python3-pyqt6 python3-evdev qt6-wayland qt6-svg
+  ```
+- openSUSE
+  ```bash
+  sudo zypper install python3 python311 PyQt6 python3-evdev qt6-wayland qt6-svg
+  ```
 
-## Features
-
-- Real-time controller priority changes
-- Virtual Xbox 360 controller emulation
-- Qt6 interface for Plasma and Wayland
-- Background daemon for input routing
-- Hardware-safe event forwarding
-- Configurable controller slot count
-- Tray integration
-
-## Requirements
-
-- Linux
-- Python 3.11 or newer
-- `evdev`
-- `PyQt6`
-- `qt6-wayland` and `qt6-svg` on KDE or Wayland systems
-
-## Installation
+Python packages:
 
 ```bash
-sudo pacman -S python-evdev python-pyqt6 qt6-wayland qt6-svg
 pip install -r requirements.txt
 pip install .
 ```
 
-Run directly from the repository:
+## Installation
 
 ```bash
 python3 joy_daemon.py
@@ -55,24 +48,15 @@ python3 joy_gui.py
 
 ## Usage
 
-Start the daemon:
+- Start daemon: `playerpicker-daemon`
+- Start GUI: `playerpicker`
 
-```bash
-playerpicker-daemon
-```
-
-Start the interface:
-
-```bash
-playerpicker
-```
-
-Configuration:
+## Environment
 
 | Variable | Default | Description |
 | --- | --- | --- |
 | `PLAYER_PICKER_SOCKET` | `/run/joy_slot.sock` | Daemon socket path |
-| `PLAYER_PICKER_ICONS` | `./icons` | Interface icon directory |
+| `PLAYER_PICKER_ICONS` | `./icons` | Icon directory |
 | `PLAYER_PICKER_SLOTS` | `4` | Number of virtual controllers |
 
 ## Service
@@ -82,21 +66,3 @@ sudo install -m 644 playerpicker.service /etc/systemd/system/playerpicker.servic
 sudo systemctl daemon-reload
 sudo systemctl enable --now playerpicker
 ```
-
-## Workflow
-
-1. Start the daemon.
-2. Open Player Picker.
-3. Click a connected physical controller.
-4. Click the target slot.
-5. The controller moves instantly and the previous occupant swaps back to the source slot.
-
-## Architecture
-
-The daemon creates virtual Xbox 360 controllers with `evdev`, grabs physical input devices and mirrors their events to the assigned slot. The PyQt6 interface communicates through a small Unix socket using JSON messages.
-
-See `docs.md` for more detail.
-
-## License
-
-GNU General Public License v3.0. See `LICENSE`.
