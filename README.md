@@ -2,7 +2,7 @@
   <img src="icons/title.png" width="520" alt="Player Picker">
 </p>
 
-<p align="center">Reassign physical gamepads to fixed virtual controller slots.</p>
+<p align="center">A friendly Linux tool to swap controller assignments while the game keeps running.</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.11+-808080?style=flat-square&logo=python&logoColor=white" alt="Python">
@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/badge/License-GPLv3-808080?style=flat-square&logo=gnu&logoColor=white" alt="License">
 </p>
 
-Player Picker grabs physical gamepads and mirrors their key/axis event streams to fixed virtual controller slots through evdev and uinput. Assignments can be changed at runtime while the game, emulator or desktop session stays active, swapping the previous occupant back automatically.
+<p align="center">It listens to physical controllers, forwards their inputs to virtual slots and arranges the exchange instantly, so previous occupants swap back without stopping gameplay or restarting the session.</p>
 
 ## Installation
 
