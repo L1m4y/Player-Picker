@@ -104,7 +104,7 @@ class VirtualGamepadManager:
             elif action == "set_slot":
                 path = req.get("path")
                 new_slot = req.get("slot")
-                if path in self.phys_devices and isinstance(new_slot, int) and 0 <= new_slot <= 3:
+                if path in self.phys_devices and isinstance(new_slot, int) and 0 <= new_slot < self.slot_count:
                     old_slot = self.phys_devices[path]["slot"]
                     for candidate, info in self.phys_devices.items():
                         if candidate != path and info["slot"] == new_slot:
