@@ -1,0 +1,25 @@
+pkgname=playerpicker
+pkgver=1.4.0
+pkgrel=1
+pkgdesc="Reassign physical gamepads to fixed virtual controller slots"
+arch=('any')
+url="https://github.com/L1m4y/Player-Picker"
+license=('GPL-3.0-or-later')
+depends=('python' 'python-evdev' 'python-pyqt6')
+optdepends=('qt6-wayland: native Wayland backend' 'qt6-svg: SVG status icons')
+makedepends=('python-build' 'python-installer' 'python-wheel')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+  cd "Player-Picker-${pkgver}"
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "Player-Picker-${pkgver}"
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 packaging/playerpicker.desktop "$pkgdir/usr/share/applications/playerpicker.desktop"
+  install -Dm644 icons/icon.png "$pkgdir/usr/share/pixmaps/playerpicker.png"
+  install -Dm644 playerpicker.service "$pkgdir/usr/lib/systemd/system/playerpicker.service"
+}

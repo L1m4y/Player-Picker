@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Player Picker
+Comment=Reassign physical gamepads to fixed virtual controller slots
+Exec=playerpicker
+Icon=playerpicker
+Terminal=false
+Categories=Utility;Game;
+Keywords=gamepad;controller;joystick;xbox;
+StartupNotify=true
