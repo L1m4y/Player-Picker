@@ -1,2 +1,2 @@
-evdev>=1.8
+evdev>=1.9
 PyQt6>=6.7

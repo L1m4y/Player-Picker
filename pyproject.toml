@@ -1,19 +1,72 @@
 [build-system]
-requires = ["setuptools>=75"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "player-picker"
-version = "0.2.0"
-description = "Reassign physical gamepads to virtual Xbox 360 controller slots"
+dynamic = ["version"]
+description = "Reassign physical gamepads to fixed virtual Xbox 360 controller slots"
 readme = "README.md"
 requires-python = ">=3.11"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+authors = [{ name = "L1m4y" }]
+keywords = ["gamepad", "controller", "evdev", "uinput", "linux", "xbox"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: X11 Applications :: Qt",
+  "Intended Audience :: End Users/Desktop",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Games/Entertainment",
+  "Topic :: System :: Hardware",
+]
 dependencies = [
-  "evdev>=1.8",
+  "evdev>=1.9",
   "PyQt6>=6.7",
 ]
-license = { file = "LICENSE" }
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.urls]
+Homepage = "https://github.com/L1m4y/Player-Picker"
+Repository = "https://github.com/L1m4y/Player-Picker"
+Issues = "https://github.com/L1m4y/Player-Picker/issues"
 
 [project.scripts]
-playerpicker = "joy_gui:main"
-playerpicker-daemon = "joy_daemon:main"
+playerpicker = "playerpicker.gui:main"
+playerpicker-daemon = "playerpicker.daemon:main"
+
+[tool.setuptools]
+include-package-data = true
+packages = ["playerpicker"]
+py-modules = ["joy_daemon", "joy_gui"]
+
+[tool.setuptools.dynamic]
+version = { attr = "playerpicker.__version__" }
+
+[tool.setuptools.data-files]
+"share/playerpicker/icons" = [
+  "icons/check.svg",
+  "icons/controller.png",
+  "icons/delete.svg",
+  "icons/icon.png",
+  "icons/title.png",
+  "icons/tray.png",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = ["build", "dist"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
