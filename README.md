@@ -11,71 +11,45 @@
   <img src="https://img.shields.io/badge/License-GPLv3-808080?style=flat-square&logo=gnu&logoColor=white" alt="License">
 </p>
 
-It listens to physical controllers, forwards their events to virtual Xbox 360 slots and rearranges
-the mapping instantly, so previous occupants swap back without stopping gameplay.
+<p align="center">It listens to physical controllers, forwards their inputs to virtual slots and arranges the exchange instantly, so previous occupants swap back without stopping gameplay or restarting the session.</p>
 
 ## Installation
 
-Arch Linux:
-
 ```bash
-cd packaging
-makepkg -si
+pip install -r requirements.txt
+pip install .
+python3 joy_daemon.py
+python3 joy_gui.py
 ```
 
-From source:
+## Dependencies
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install .
-```
+- Arch Linux
+  ```bash
+  sudo pacman -S python python-pyqt6 python-evdev qt6-wayland qt6-svg
+  ```
+- Debian / Ubuntu
+  ```bash
+  sudo apt install python3 python3-pyqt6 python3-evdev qt6-wayland qt6-svg
+  ```
+- Fedora
+  ```bash
+  sudo dnf install python3 python3-pyqt6 python3-evdev qt6-wayland qt6-svg
+  ```
+- openSUSE
+  ```bash
+  sudo zypper install python3 python311 PyQt6 python3-evdev qt6-wayland qt6-svg
+  ```
 
-Manual service:
+## Usage
+
+- Start daemon: `playerpicker-daemon`
+- Start GUI: `playerpicker`
+
+Service:
 
 ```bash
 sudo install -m 644 playerpicker.service /etc/systemd/system/playerpicker.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now playerpicker
 ```
-
-Install system dependencies as appropriate for your distribution (`python-evdev`, `python-pyqt6`,
-`qt6-wayland`, `qt6-svg`).
-
-## Permissions
-
-The daemon needs `/dev/uinput` and the `/dev/input/event*` nodes. Run it as root through the
-service, or with `sudo` when running by hand. The GUI runs as the desktop user.
-
-## Usage
-
-Start `playerpicker-daemon`, then `playerpicker`. Click an occupied tile, then click another
-tile to move the controller there. Click the selected tile again to cancel.
-
-## Environment variables
-
-| Variable | Default | Effect |
-| --- | --- | --- |
-| `PLAYER_PICKER_SOCKET` | `/run/joy_slot.sock` | Daemon socket path used by both binaries |
-| `PLAYER_PICKER_SLOTS` | `4` | Virtual slot count, from `1` to `8` |
-| `PLAYER_PICKER_ICONS` | unset | Directory overriding the bundled icons |
-
-## Troubleshooting
-
-- If the GUI says the daemon is waiting, start `playerpicker-daemon` or the service.
-- Run with `--log-level DEBUG` to inspect device detection and IPC requests.
-- Invalid `PLAYER_PICKER_SLOTS` values are rejected with a clear error instead of being clamped.
-
-## Development
-
-```bash
-python -m pip install -e ".[dev]"
-pytest -q
-ruff check .
-```
-
-## License
-
-GPLv3. See [LICENSE](LICENSE).
-EOF
-echo ok
